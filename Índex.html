@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutelas Provisórias (Arts. 294 a 311 do CPC) — Material de Estudo &amp; 50 Questões</title>
+<style>
+  :root {
+    --bg-void: #07070a;
+    --bg-surface: #111319;
+    --bg-elevated: #171a23;
+    --border-subtle: rgba(255, 255, 255, 0.07);
+    --border-strong: rgba(255, 255, 255, 0.14);
+    --text-primary: #f1f5f9;
+    --text-secondary: #a1acc2;
+    --text-muted: #64748b;
+    --accent-gold: #e5b869;
+    --accent-gold-dim: rgba(229, 184, 105, 0.12);
+    --accent-blue: #60a5fa;
+    --accent-blue-dim: rgba(96, 165, 250, 0.12);
+    --accent-emerald: #34d399;
+    --accent-emerald-dim: rgba(52, 211, 153, 0.12);
+    --accent-rose: #fb7185;
+    --accent-rose-dim: rgba(251, 113, 133, 0.12);
+    --accent-violet: #a78bfa;
+    --accent-violet-dim: rgba(167, 139, 250, 0.12);
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --shadow-card: 0 12px 32px -12px rgba(0, 0, 0, 0.72);
+    --font-sans: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    --font-serif: "Georgia", "Cambria", "Times New Roman", serif;
+    --font-mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: radial-gradient(circle at 15% 0%, rgba(96,165,250,0.06), transparent 40%),
+                radial-gradient(circle at 85% 12%, rgba(229,184,105,0.05), transparent 38%),
+                var(--bg-void);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    line-height: 1.7;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #read-progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-gold));
+    z-index: 1000;
+    transition: width 0.1s ease-out;
+  }
+
+  .app-shell {
+    max-width: 1340px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 275px minmax(0, 1fr);
+    gap: 28px;
+    padding: 28px 24px 80px;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-card);
+  }
+  .sidebar-brand {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent-gold);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .sidebar-title {
+    font-size: 1.04rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    line-height: 1.35;
+  }
+  .nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 18px;
+  }
+  .nav-list a {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 11px;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.18s ease;
+    border: 1px solid transparent;
+  }
+  .nav-list a:hover, .nav-list a.active {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    border-color: var(--border-subtle);
+  }
+  .nav-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .nav-list a.active .nav-dot { background: var(--accent-gold); }
+
+  .sidebar-score {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 16px;
+  }
+  .score-label {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .score-box {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 8px 6px;
+    text-align: center;
+  }
+  .score-box .num {
+    display: block;
+    font-size: 1.08rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+  }
+  .score-box .lbl { font-size: 0.68rem; color: var(--text-muted); }
+  .num.ok { color: var(--accent-emerald); }
+  .num.err { color: var(--accent-rose); }
+  .num.pct { color: var(--accent-gold); }
+
+  .main-content { display: flex; flex-direction: column; gap: 26px; }
+
+  .hero {
+    background: linear-gradient(145deg, rgba(23,26,35,0.96), rgba(13,15,20,0.98));
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    padding: 34px 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(229,184,105,0.14), transparent 70%);
+    pointer-events: none;
+  }
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .badge {
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 4px 11px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+    border: 1px solid transparent;
+  }
+  .badge-gold { background: var(--accent-gold-dim); color: var(--accent-gold); border-color: rgba(229,184,105,0.28); }
+  .badge-blue { background: var(--accent-blue-dim); color: var(--accent-blue); border-color: rgba(96,165,250,0.28); }
+  .badge-violet { background: var(--accent-violet-dim); color: var(--accent-violet); border-color: rgba(167,139,250,0.28); }
+  .badge-emerald { background: var(--accent-emerald-dim); color: var(--accent-emerald); border-color: rgba(52,211,153,0.28); }
+  .badge-rose { background: var(--accent-rose-dim); color: var(--accent-rose); border-color: rgba(251,113,133,0.28); }
+
+  .hero h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 3vw, 2.35rem);
+    font-weight: 700;
+    line-height: 1.22;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .hero p { color: var(--text-secondary); font-size: 1rem; max-width: 75ch; }
+
+  .section-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 30px 32px;
+    box-shadow: var(--shadow-card);
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .section-num {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    background: var(--accent-gold-dim);
+    border: 1px solid rgba(229,184,105,0.25);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+  }
+  .section-header h2 {
+    font-size: 1.32rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  h3 { font-size: 1.08rem; color: #e2e8f0; margin: 22px 0 10px; font-weight: 650; }
+  p { color: var(--text-secondary); margin-bottom: 12px; }
+  strong { color: var(--text-primary); }
+  ul.clean {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 10px 0 16px;
+  }
+  ul.clean li { position: relative; padding-left: 18px; color: var(--text-secondary); }
+  ul.clean li::before {
+    content: "›";
+    position: absolute;
+    left: 0;
+    color: var(--accent-gold);
+    font-weight: 700;
+  }
+
+  .lei-seca {
+    background: linear-gradient(135deg, rgba(229,184,105,0.07), rgba(17,19,25,0.95));
+    border: 1px solid rgba(229,184,105,0.26);
+    border-left: 4px solid var(--accent-gold);
+    border-radius: var(--radius-md);
+    padding: 18px 22px;
+    margin: 16px 0;
+  }
+  .lei-seca-title {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-gold);
+    margin-bottom: 8px;
+  }
+  .lei-seca blockquote {
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    line-height: 1.66;
+  }
+  .lei-seca blockquote p { color: #e2e8f0; margin-bottom: 6px; }
+  .lei-seca blockquote p:last-child { margin-bottom: 0; }
+
+  .callout {
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    margin: 16px 0;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+  .callout-blue { border-left: 4px solid var(--accent-blue); background: rgba(96,165,250,0.06); }
+  .callout-emerald { border-left: 4px solid var(--accent-emerald); background: rgba(52,211,153,0.06); }
+  .callout-rose { border-left: 4px solid var(--accent-rose); background: rgba(251,113,133,0.06); }
+  .callout-title {
+    font-size: 0.84rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+  .callout-blue .callout-title { color: var(--accent-blue); }
+  .callout-emerald .callout-title { color: var(--accent-emerald); }
+  .callout-rose .callout-title { color: var(--accent-rose); }
+
+  .tree-box {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: #cbd5e1;
+    overflow-x: auto;
+    line-height: 1.55;
+    margin: 16px 0;
+  }
+
+  .scale-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 18px 0;
+  }
+  .scale-step {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 16px;
+  }
+  .scale-pct {
+    font-family: var(--font-mono);
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .scale-step.s50 .scale-pct { color: var(--text-muted); }
+  .scale-step.s51 .scale-pct { color: var(--accent-blue); }
+  .scale-step.s90 .scale-pct { color: var(--accent-gold); }
+  .scale-step.s100 .scale-pct { color: var(--accent-emerald); }
+  .scale-step h4 { font-size: 0.92rem; color: var(--text-primary); margin-bottom: 4px; }
+  .scale-step p { font-size: 0.82rem; margin: 0; line-height: 1.45; }
+
+  .table-wrap {
+    overflow-x: auto;
+    margin: 16px 0;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 0.91rem; }
+  th {
+    background: var(--bg-elevated);
+    color: var(--accent-gold);
+    text-align: left;
+    padding: 12px 15px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--border-strong);
+  }
+  td {
+    padding: 11px 15px;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .incisos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 18px 0;
+  }
+  .inciso-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .inciso-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .inciso-num { font-family: var(--font-mono); font-weight: 800; font-size: 0.88rem; color: var(--text-primary); }
+
+  .quiz-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    background: var(--bg-elevated);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+  }
+  .filter-group { display: flex; flex-wrap: wrap; gap: 6px; }
+  .btn-filter, .btn-action {
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.16s ease;
+  }
+  .btn-filter:hover, .btn-action:hover { color: var(--text-primary); border-color: var(--border-strong); }
+  .btn-filter.active {
+    background: var(--accent-gold-dim);
+    color: var(--accent-gold);
+    border-color: rgba(229,184,105,0.4);
+  }
+  .btn-action { border-radius: var(--radius-sm); }
+
+  .q-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .q-card.answered-ok { border-color: rgba(52,211,153,0.45); }
+  .q-card.answered-err { border-color: rgba(251,113,133,0.45); }
+  .q-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .q-num { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--accent-gold); }
+  .q-tag {
+    font-size: 0.72rem; color: var(--text-muted); background: var(--bg-surface);
+    padding: 2px 9px; border-radius: 999px; border: 1px solid var(--border-subtle);
+  }
+  .q-stem { color: var(--text-primary); font-weight: 500; margin-bottom: 14px; font-size: 0.97rem; }
+  .q-opts { display: flex; flex-direction: column; gap: 8px; }
+  .q-opt {
+    display: flex; align-items: flex-start; gap: 10px; width: 100%; text-align: left;
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+    padding: 11px 14px; color: var(--text-secondary); font-size: 0.91rem; cursor: pointer;
+    transition: all 0.15s ease; font-family: inherit; line-height: 1.5;
+  }
+  .q-opt:hover:not(:disabled) { background: rgba(255,255,255,0.04); border-color: var(--border-strong); color: var(--text-primary); }
+  .q-opt:disabled { cursor: default; }
+  .q-opt .opt-letter { font-family: var(--font-mono); font-weight: 700; color: var(--text-muted); min-width: 20px; }
+  .q-opt.correct { background: var(--accent-emerald-dim); border-color: rgba(52,211,153,0.5); color: #ecfdf5; }
+  .q-opt.correct .opt-letter { color: var(--accent-emerald); }
+  .q-opt.wrong { background: var(--accent-rose-dim); border-color: rgba(251,113,133,0.5); color: #fff1f2; }
+  .q-opt.wrong .opt-letter { color: var(--accent-rose); }
+  .q-feedback {
+    margin-top: 14px; padding: 14px 16px; border-radius: var(--radius-sm);
+    background: rgba(11, 12, 16, 0.75); border: 1px solid var(--border-subtle);
+    font-size: 0.88rem; color: var(--text-secondary); display: none;
+  }
+  .q-feedback.show { display: block; }
+  .q-feedback strong { color: var(--accent-gold); }
+
+  @media (max-width: 980px) {
+    .app-shell { grid-template-columns: 1fr; padding: 16px 14px 60px; }
+    .sidebar { position: static; }
+    .scale-grid { grid-template-columns: repeat(2, 1fr); }
+    .incisos-grid { grid-template-columns: 1fr; }
+    .section-card, .hero { padding: 22px 18px; }
+  }
+  @media (max-width: 540px) { .scale-grid { grid-template-columns: 1fr; } }
+  @media print {
+    body { background: #fff; color: #111; }
+    .sidebar, .quiz-controls, #read-progress { display: none !important; }
+    .app-shell { display: block; padding: 0; }
+    .section-card, .hero, .q-card { box-shadow: none; border: 1px solid #ccc; background: #fff; color: #111; }
+    p, td, li, .q-opt { color: #222; }
+  }
+</style>
+</head>
+<body>
+<div id="read-progress"></div>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">Direito Processual Civil · CPC/2015</div>
+    <div class="sidebar-title">Tutelas Provisórias (Livro V — Arts. 294 a 311)</div>
+    <ul class="nav-list" id="toc">
+      <li><a href="#sec-geral"><span class="nav-dot"></span>1. Teoria Geral (294–299)</a></li>
+      <li><a href="#sec-urgencia"><span class="nav-dot"></span>2. Tutela de Urgência (300–302)</a></li>
+      <li><a href="#sec-cautelar"><span class="nav-dot"></span>3. Cautelar Antecedente (305–310)</a></li>
+      <li><a href="#sec-estab"><span class="nav-dot"></span>4. Antecipada &amp; Estabilização (303–304)</a></li>
+      <li><a href="#sec-evidencia"><span class="nav-dot"></span>5. Tutela de Evidência (311)</a></li>
+      <li><a href="#sec-recursos"><span class="nav-dot"></span>6. Recursos &amp; Perda de Objeto</a></li>
+      <li><a href="#sec-quiz"><span class="nav-dot"></span>7. Simulado (50 Questões)</a></li>
+    </ul>
+
+    <div class="sidebar-score">
+      <div class="score-label"><span>Desempenho</span><span id="score-answered">0/50</span></div>
+      <div class="score-grid">
+        <div class="score-box"><span class="num ok" id="score-ok">0</span><span class="lbl">Acertos</span></div>
+        <div class="score-box"><span class="num err" id="score-err">0</span><span class="lbl">Erros</span></div>
+        <div class="score-box"><span class="num pct" id="score-pct">0%</span><span class="lbl">Taxa</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="hero">
+      <div class="badges">
+        <span class="badge badge-gold">CPC/2015 · Arts. 294 a 311</span>
+        <span class="badge badge-blue">ESA Nacional · Prof. Guilherme Hartmann</span>
+        <span class="badge badge-violet">Doutrina · Elpídio Donizetti (2026)</span>
+        <span class="badge badge-emerald">Lei Seca + 50 Questões</span>
+      </div>
+      <h1>Tutelas Provisórias: Teoria Geral, Urgência, Estabilização e Evidência</h1>
+      <p>Material completo e unificado para revisão definitiva do Livro V do CPC, integrando as Aulas 01, 02 e 03 da ESA Nacional, a doutrina do Curso de Direito Processual Civil (29ª ed., 2026), a jurisprudência do STJ e do STF e a transcrição literal dos dispositivos legais.</p>
+    </header>
+
+    <!-- 1. TEORIA GERAL -->
+    <section class="section-card" id="sec-geral">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>Teoria Geral da Tutela Provisória (Arts. 294 a 299 do CPC)</h2>
+      </div>
+      <p>O processo de cognição exauriente demanda tempo para o contraditório e a produção de provas. Para evitar que a demora prejudique quem tem razão (<em>iniquidade da demora</em>), o CPC estrutura a <strong>tutela provisória</strong>, concretizando o acesso à justiça (art. 5º, XXXV, CF) e a duração razoável do processo (art. 5º, LXXVIII, CF).</p>
+
+      <pre class="tree-box">                               ┌─── Antecipada (Satisfativa) ───┬── Antecedente (art. 303)
+                               │                                └── Incidental (art. 294, p. u.)
+         ┌── Tutela de Urgência─┤
+         │   (art. 300)        │
+         │                     └─── Cautelar (Conservativa) ────┬── Antecedente (art. 305)
+GÊNERO:  │                                                      └── Incidental (art. 294, p. u.)
+TUTELA ──┤
+PROVISÓRIA
+         │                         ┌── Liminar (art. 311, II e III)
+         └── Tutela da Evidência ──┤
+             (art. 311)            └── Dependente de Contraditório (art. 311, I e IV)
+                                       *(Sempre Incidental e Satisfativa)*</pre>
+
+      <div class="lei-seca">
+        <div class="lei-seca-title">📜 Lei Seca — Disposições Gerais (Arts. 294 a 299 do CPC)</div>
+        <blockquote>
+          <p><strong>Art. 294.</strong> A tutela provisória pode fundamentar-se em urgência ou evidência. Parágrafo único. A tutela provisória de urgência, cautelar ou antecipada, pode ser concedida em caráter antecedente ou incidental.</p>
+          <p><strong>Art. 295.</strong> A tutela provisória requerida em caráter incidental independe do pagamento de custas.</p>
+          <p><strong>Art. 296.</strong> A tutela provisória conserva sua eficácia na pendência do processo, mas pode, a qualquer tempo, ser revogada ou modificada. Parágrafo único. Salvo decisão judicial em contrário, a tutela provisória conservará a eficácia durante o período de suspensão do processo.</p>
+          <p><strong>Art. 297.</strong> O juiz poderá determinar as medidas que considerar adequadas para efetivação da tutela provisória. Parágrafo único. A efetivação da tutela provisória observará as normas referentes ao cumprimento provisório da sentença, no que couber.</p>
+          <p><strong>Art. 298.</strong> Na decisão que conceder, negar, modificar ou revogar a tutela provisória, o juiz motivará seu convencimento de modo claro e preciso.</p>
+          <p><strong>Art. 299.</strong> A tutela provisória será requerida ao juízo da causa e, quando antecedente, ao juízo competente para conhecer do pedido principal. Parágrafo único. Ressalvada disposição especial, na ação de competência originária de tribunal e nos recursos a tutela provisória será requerida ao órgão jurisdicional competente para apreciar o mérito.</p>
+        </blockquote>
+      </div>
+
+      <h3>Características, Efetivação, Fungibilidade e Fazenda Pública</h3>
+      <ul class="clean">
+        <li><strong>Cognição sumária e precariedade:</strong> baseada em juízo de probabilidade (não de certeza), não faz coisa julgada material e pode ser revogada/modificada a qualquer tempo (art. 296).</li>
+        <li><strong>Poder geral de efetivação (art. 297):</strong> admite <em>astreintes</em> (inclusive contra a Fazenda Pública — STJ, AgInt no REsp 1.972.822/MG) e medidas atípicas (art. 139, IV; ADI 5.941/STF).</li>
+        <li><strong>Fungibilidade plena (de mão dupla):</strong> entre cautelar e antecipada (art. 305, parágrafo único; STJ AgRg no REsp 1.103.299/BA) e também entre urgência e evidência (doutrina de Elpídio Donizetti).</li>
+        <li><strong>Fazenda Pública:</strong> restrições das Leis 8.437/92 e 9.494/97 (ADC 4/STF) são mitigadas em matéria previdenciária/alimentar (Súmula 729/STF), saúde/vida e risco de perecimento de direito (Enunciado 35/FPPC). No Mandado de Segurança, a ADI 4296/STF declarou inconstitucional o art. 7º, § 2º, da Lei 12.016/09.</li>
+      </ul>
+    </section>
+
+    <!-- 2. TUTELA DE URGÊNCIA -->
+    <section class="section-card" id="sec-urgencia">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Tutela de Urgência: Requisitos, Caução, Reversibilidade e Risco (Arts. 300 a 302)</h2>
+      </div>
+
+      <div class="lei-seca">
+        <div class="lei-seca-title">📜 Lei Seca — Arts. 300 a 302 do CPC</div>
+        <blockquote>
+          <p><strong>Art. 300.</strong> A tutela de urgência será concedida quando houver elementos que evidenciem a probabilidade do direito e o perigo de dano ou o risco ao resultado útil do processo.</p>
+          <p>§ 1º Para a concessão da tutela de urgência, o juiz pode, conforme o caso, exigir caução real ou fidejussória idônea para ressarcir os danos que a outra parte possa vir a sofrer, podendo a caução ser dispensada se a parte economicamente hipossuficiente não puder oferecê-la.</p>
+          <p>§ 2º A tutela de urgência pode ser concedida liminarmente ou após justificação prévia.</p>
+          <p>§ 3º A tutela de urgência de natureza antecipada não será concedida quando houver perigo de irreversibilidade dos efeitos da decisão.</p>
+          <p><strong>Art. 301.</strong> A tutela de urgência de natureza cautelar pode ser efetivada mediante arresto, sequestro, arrolamento de bens, registro de protesto contra alienação de bem e qualquer outra medida idônea para asseguração do direito.</p>
+          <p><strong>Art. 302.</strong> Independentemente da reparação por dano processual, a parte responde pelo prejuízo que a efetivação da tutela de urgência causar à parte adversa, se: I – a sentença lhe for desfavorável; II – obtida liminarmente a tutela em caráter antecedente, não fornecer os meios necessários para a citação do requerido no prazo de 5 (cinco) dias; III – ocorrer a cessação da eficácia da medida em qualquer hipótese legal; IV – o juiz acolher a alegação de decadência ou prescrição da pretensão do autor. Parágrafo único. A indenização será liquidada nos autos em que a medida tiver sido concedida, sempre que possível.</p>
+        </blockquote>
+      </div>
+
+      <h3>Escala Didática de Convicção (Hartmann / Donizetti)</h3>
+      <div class="scale-grid">
+        <div class="scale-step s50"><span class="scale-pct">50%</span><h4>Dúvida</h4><p>Sem tutela provisória.</p></div>
+        <div class="scale-step s51"><span class="scale-pct">51%+</span><h4>Urgência (Art. 300)</h4><p><em>Fumus boni iuris</em> + <em>periculum in mora</em>.</p></div>
+        <div class="scale-step s90"><span class="scale-pct">85%–90%</span><h4>Evidência (Art. 311)</h4><p>Direito evidente; dispensa urgência.</p></div>
+        <div class="scale-step s100"><span class="scale-pct">100%</span><h4>Sentença</h4><p>Certeza (cognição exauriente).</p></div>
+      </div>
+
+      <ul class="clean">
+        <li><strong>Caução e Gratuidade (art. 300, § 1º):</strong> Segundo a 4ª Turma do STJ (REsp 1.837.156, j. 10.06.2025), a concessão de gratuidade de justiça (art. 98) <strong>não afasta automaticamente</strong> a caução. Para exclusão de SPC/SERASA (Temas 31–34/STJ), exige-se questionamento do débito, aparência do bom direito e depósito da parcela incontroversa ou caução.</li>
+        <li><strong>Irreversibilidade fática vs. jurídica (art. 300, § 3º):</strong> A vedação refere-se à irreversibilidade <em>fática</em> na tutela antecipada, sendo mitigada por ponderação de direitos fundamentais (saúde, vida, alimentos — Enunciado 25/ENFAM e Enunciado 40/CJF).</li>
+        <li><strong>Responsabilidade objetiva (art. 302):</strong> O STJ adota a teoria do risco-proveito (responsabilidade objetiva liquidada nos próprios autos; REsp 1.191.262/DF e REsp 1.770.124/SP). No Tema 692/STJ, valores previdenciários recebidos por tutela revogada devem ser devolvidos (desconto de até 30% no benefício). Donizetti critica a objetivação irrestrita nos incisos I e IV.</li>
+      </ul>
+    </section>
+
+    <!-- 3. CAUTELAR ANTECEDENTE -->
+    <section class="section-card" id="sec-cautelar">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Tutela Cautelar vs. Antecipada &amp; Rito Cautelar Antecedente (Arts. 305 a 310)</h2>
+      </div>
+      <p>O CPC/2015 extinguiu o processo cautelar autônomo do CPC/73. Hoje a tutela cautelar tem caráter meramente <strong>assecuratório/conservativo</strong> (ex.: arresto, sequestro, arrolamento de bens e registro de protesto contra alienação — art. 301).</p>
+
+      <div class="lei-seca">
+        <div class="lei-seca-title">📜 Lei Seca — Rito Cautelar Antecedente (Arts. 305 a 310 do CPC)</div>
+        <blockquote>
+          <p><strong>Art. 305.</strong> A petição inicial da ação que visa à prestação de tutela cautelar em caráter antecedente indicará a lide e seu fundamento, a exposição sumária do direito que se objetiva assegurar e o perigo de dano ou o risco ao resultado útil do processo. Parágrafo único. Caso entenda que o pedido a que se refere o caput tem natureza antecipada, o juiz observará o disposto no art. 303.</p>
+          <p><strong>Art. 306.</strong> O réu será citado para, no prazo de 5 (cinco) dias, contestar o pedido e indicar as provas que pretende produzir.</p>
+          <p><strong>Art. 307.</strong> Não sendo contestado o pedido, os fatos alegados pelo autor presumir-se-ão aceitos pelo réu como ocorridos, caso em que o juiz decidirá dentro de 5 (cinco) dias. Parágrafo único. Contestado o pedido no prazo legal, observar-se-á o procedimento comum.</p>
+          <p><strong>Art. 308.</strong> Efetivada a tutela cautelar, o pedido principal terá de ser formulado pelo autor no prazo de 30 (trinta) dias, caso em que será apresentado nos mesmos autos em que deduzido o pedido de tutela cautelar, não dependendo do adiantamento de novas custas processuais.</p>
+          <p><strong>Art. 309.</strong> Cessa a eficácia da tutela concedida em caráter antecedente, se: I – o autor não deduzir o pedido principal no prazo legal; II – não for efetivada dentro de 30 (trinta) dias; III – o juiz julgar improcedente o pedido principal formulado pelo autor ou extinguir o processo sem resolução de mérito. Parágrafo único. Se por qualquer motivo cessar a eficácia da tutela cautelar, é vedado à parte renovar o pedido, salvo sob novo fundamento.</p>
+          <p><strong>Art. 310.</strong> O indeferimento da tutela cautelar não obsta a que a parte formule o pedido principal, nem influi no julgamento desse, salvo se o motivo do indeferimento for o reconhecimento de decadência ou de prescrição.</p>
+        </blockquote>
+      </div>
+
+      <div class="callout callout-emerald">
+        <div class="callout-title">Jurisprudência STJ — Prazo de 30 Dias (Art. 308)</div>
+        <p style="margin:0;">A Corte Especial do STJ (EREsp 2.066.868/SP, j. 03.04.2024) pacificou que o prazo de 30 dias para formular o pedido principal conta-se em <strong>dias úteis</strong> (art. 219 do CPC) e inicia-se somente após a <strong>completa efetivação</strong> da medida cautelar (REsp 1.954.457/GO).</p>
+      </div>
+    </section>
+
+    <!-- 4. TUTELA ANTECIPADA ANTECEDENTE E ESTABILIZAÇÃO -->
+    <section class="section-card" id="sec-estab">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Tutela Antecipada Antecedente e Estabilização (Arts. 303 e 304)</h2>
+      </div>
+
+      <div class="lei-seca">
+        <div class="lei-seca-title">📜 Lei Seca — Arts. 303 e 304 do CPC</div>
+        <blockquote>
+          <p><strong>Art. 303.</strong> Nos casos em que a urgência for contemporânea à propositura da ação, a petição inicial pode limitar-se ao requerimento da tutela antecipada e à indicação do pedido de tutela final, com a exposição da lide, do direito que se busca realizar e do perigo de dano ou do risco ao resultado útil do processo.</p>
+          <p>§ 1º Concedida a tutela antecipada a que se refere o caput deste artigo: I – o autor deverá aditar a petição inicial, com a complementação de sua argumentação, a juntada de novos documentos e a confirmação do pedido de tutela final, em 15 (quinze) dias ou em outro prazo maior que o juiz fixar; II – o réu será citado e intimado para a audiência de conciliação ou de mediação na forma do art. 334; III – não havendo autocomposição, o prazo para contestação será contado na forma do art. 335.</p>
+          <p>§ 2º Não realizado o aditamento a que se refere o inciso I do § 1º deste artigo, o processo será extinto sem resolução do mérito. § 3º O aditamento dar-se-á nos mesmos autos, sem incidência de novas custas processuais. § 4º O autor terá de indicar o valor da causa, que deve levar em consideração o pedido de tutela final. § 5º O autor indicará na petição inicial, ainda, que pretende valer-se do benefício previsto no caput deste artigo. § 6º Caso entenda que não há elementos para a concessão de tutela antecipada, o órgão jurisdicional determinará a emenda da petição inicial em até 5 (cinco) dias, sob pena de ser indeferida e de o processo ser extinto sem resolução de mérito.</p>
+          <p><strong>Art. 304.</strong> A tutela antecipada, concedida nos termos do art. 303, torna-se estável se da decisão que a conceder não for interposto o respectivo recurso. § 1º No caso previsto no caput, o processo será extinto. § 2º Qualquer das partes poderá demandar a outra com o intuito de rever, reformar ou invalidar a tutela antecipada estabilizada nos termos do caput. § 5º O direito de rever, reformar ou invalidar a tutela antecipada, previsto no § 2º deste artigo, extingue-se após 2 (dois) anos, contados da ciência da decisão que extinguiu o processo, nos termos do § 1º. § 6º A decisão que concede a tutela não fará coisa julgada, mas a estabilidade dos respectivos efeitos só será afastada por decisão que a revir, reformar ou invalidar, proferida em ação ajuizada por uma das partes, nos termos do § 2º deste artigo.</p>
+        </blockquote>
+      </div>
+
+      <h3>Teses Consolidadas e Divergências no STJ</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tema / Polêmica</th>
+              <th>Entendimento Consolidado / Correntes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Como o réu impede a estabilização?</strong></td>
+              <td><strong>3ª e 4ª Turmas do STJ (Majoritária — REsp 1.760.966/SP; REsp 1.938.645/CE, 2024):</strong> Qualquer impugnação tempestiva (inclusive <strong>contestação</strong>) impede a estabilização.<br><strong>1ª Turma do STJ (REsp 1.797.365/RS) e Donizetti:</strong> Apenas a interposição do <strong>recurso (agravo de instrumento)</strong> impede a estabilização.</td>
+            </tr>
+            <tr>
+              <td><strong>Ordem dos prazos (Réu vs. Autor)</strong></td>
+              <td><strong>Prazos sucessivos (STJ, 2020 e 2024):</strong> Primeiro corre o prazo do réu após a citação para recorrer; só se o réu impugnar abre-se o prazo de 15 dias do autor para aditar (ou o autor pode antecipar o aditamento — art. 218, § 4º).</td>
+            </tr>
+            <tr>
+              <td><strong>Honorários na estabilização</strong></td>
+              <td><strong>5% sobre o valor da causa</strong>, por analogia ao art. 701 do CPC (STJ, 3ª Turma, REsp 1.895.663/PR).</td>
+            </tr>
+            <tr>
+              <td><strong>Coisa julgada vs. Ação revisional</strong></td>
+              <td><strong>Não faz coisa julgada material</strong> (art. 304, § 6º; descabe ação rescisória — Enunciado 33/FPPC). Ação revisional autônoma no prazo decadencial de <strong>2 anos</strong> (juízo prevento).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 5. TUTELA DE EVIDÊNCIA -->
+    <section class="section-card" id="sec-evidencia">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2>Tutela da Evidência (Art. 311) e Divórcio Liminar</h2>
+      </div>
+      <p>A tutela de evidência é <strong>sempre incidental</strong> e <strong>sempre satisfativa</strong>, dispensando a demonstração de perigo de dano ou risco ao resultado útil do processo.</p>
+
+      <div class="lei-seca">
+        <div class="lei-seca-title">📜 Lei Seca — Art. 311, Art. 9º e Art. 701 do CPC</div>
+        <blockquote>
+          <p><strong>Art. 311.</strong> A tutela da evidência será concedida, independentemente da demonstração de perigo de dano ou de risco ao resultado útil do processo, quando: I – ficar caracterizado o abuso do direito de defesa ou o manifesto propósito protelatório da parte; II – as alegações de fato puderem ser comprovadas apenas documentalmente e houver tese firmada em julgamento de casos repetitivos ou em súmula vinculante; III – se tratar de pedido reipersecutório fundado em prova documental adequada do contrato de depósito, caso em que será decretada a ordem de entrega do objeto custodiado, sob cominação de multa; IV – a petição inicial for instruída com prova documental suficiente dos fatos constitutivos do direito do autor, a que o réu não oponha prova capaz de gerar dúvida razoável. Parágrafo único. Nas hipóteses dos incisos II e III, o juiz poderá decidir liminarmente.</p>
+          <p><strong>Art. 9º, parágrafo único.</strong> O disposto no caput [contraditório prévio] não se aplica: (...) II – às hipóteses de tutela da evidência previstas no art. 311, incisos II e III; III – à decisão prevista no art. 701.</p>
+          <p><strong>Art. 701.</strong> Sendo evidente o direito do autor, o juiz deferirá a expedição de mandado de pagamento, de entrega de coisa ou para execução de obrigação de fazer ou de não fazer, concedendo ao réu prazo de 15 (quinze) dias para o cumprimento e o pagamento de honorários advocatícios de cinco por cento do valor atribuído à causa.</p>
+        </blockquote>
+      </div>
+
+      <div class="incisos-grid">
+        <div class="inciso-card">
+          <div class="inciso-top"><span class="inciso-num">Inciso I — Abuso / Protelação</span><span class="badge badge-rose">Exige Contraditório</span></div>
+          <p style="font-size:0.89rem;">Exige abuso/protelação do réu + verossimilhança do direito do autor (STJ, 2022; Enunciado 47/CJF). Na prática, muitas vezes o juiz aplica logo o julgamento antecipado do mérito (art. 355).</p>
+        </div>
+        <div class="inciso-card">
+          <div class="inciso-top"><span class="inciso-num">Inciso II — Documental + Tese</span><span class="badge badge-emerald">Cabe Liminar</span></div>
+          <p style="font-size:0.89rem;">Fatos provados por documentos + tese em repetitivos (art. 928) ou Súmula Vinculante. Ampliado para Repercussão Geral, IAC, súmulas STJ/STF e ADI/ADC/ADPF (Enunciados 48/CJF e 30–31/ENFAM).</p>
+        </div>
+        <div class="inciso-card">
+          <div class="inciso-top"><span class="inciso-num">Inciso III — Depósito</span><span class="badge badge-emerald">Cabe Liminar</span></div>
+          <p style="font-size:0.89rem;">Pedido reipersecutório fundado em prova documental do contrato de depósito (arts. 627, 629 e 647 do CC): ordem de entrega sob cominação de multa.</p>
+        </div>
+        <div class="inciso-card">
+          <div class="inciso-top"><span class="inciso-num">Inciso IV — Sem Dúvida Razoável</span><span class="badge badge-rose">Exige Contraditório</span></div>
+          <p style="font-size:0.89rem;">Prova documental robusta na inicial sem contraprova do réu após contestação que gere dúvida razoável.</p>
+        </div>
+      </div>
+
+      <ul class="clean">
+        <li><strong>Rol não exaustivo e prática:</strong> abrange também mandado monitório (art. 701), levantamento de valor incontroverso bloqueado (TJMG) e fruição antecipada de bens em inventário sem oposição dos herdeiros.</li>
+        <li><strong>Divórcio liminar:</strong> direito potestativo incondicionado. Corrente favorável excepcional (Enunciado 46/IBDFAM; TJRJ 2024 e TJMG) pela dignidade humana e dificuldade de citação vs. corrente restritiva pelo contraditório prévio (art. 9º) e taxatividade do art. 311, parágrafo único.</li>
+      </ul>
+    </section>
+
+    <!-- 6. RECURSOS E PERDA DE OBJETO -->
+    <section class="section-card" id="sec-recursos">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <h2>Recorribilidade, Agravo de Instrumento e Perda de Objeto</h2>
+      </div>
+      <ul class="clean">
+        <li><strong>Agravo de Instrumento (art. 1.015, I, CPC):</strong> cabe contra decisão interlocutória de 1º grau que concede, nega, modifica ou revoga tutela provisória (urgência ou evidência). Não tem efeito suspensivo automático (art. 995).</li>
+        <li><strong>Perda superveniente do objeto (STJ, 2024):</strong> proferida sentença de mérito em 1º grau (cognição exauriente), o agravo de instrumento pendente contra a tutela provisória perde o objeto, salvo se a parte recorrer da sentença e subsistir utilidade recursal específica.</li>
+        <li><strong>Tribunais Superiores:</strong> aplica-se por analogia a <strong>Súmula 735 do STF</strong> (descabe RE/REsp contra acórdão que aprecia liminar, salvo violação direta a requisito legal), bem como as <strong>Súmulas 7/STJ e 279/STF</strong>.</li>
+        <li><strong>Tema Repetitivo 743/STJ (reafirmado em 2023):</strong> admite a execução provisória de multa cominatória (<em>astreintes</em>) fixada em tutela provisória, condicionando o levantamento ao trânsito em julgado.</li>
+      </ul>
+    </section>
+
+    <!-- 7. SIMULADO 50 QUESTÕES -->
+    <section class="section-card" id="sec-quiz">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <h2>Bateria de Fixação — 50 Questões Comentadas (Livro V do CPC)</h2>
+      </div>
+
+      <div class="quiz-controls">
+        <div class="filter-group" id="filter-group">
+          <button class="btn-filter active" data-filter="all">Todas (50)</button>
+          <button class="btn-filter" data-filter="geral">Teoria Geral (10)</button>
+          <button class="btn-filter" data-filter="urgencia">Urgência &amp; Cautelar (14)</button>
+          <button class="btn-filter" data-filter="estab">Antecedente &amp; Estab. (12)</button>
+          <button class="btn-filter" data-filter="evidencia">Evidência &amp; Recursos (14)</button>
+          <button class="btn-filter" data-filter="wrong">Erradas</button>
+        </div>
+        <button class="btn-action" id="btn-reset">↺ Reiniciar</button>
+      </div>
+
+      <div id="quiz-container"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+const QUESTIONS = [
+  // 1-10: TEORIA GERAL
+  { id: 1, cat: "geral", tag: "Art. 294", q: "Segundo o art. 294 do CPC, a tutela provisória pode fundamentar-se em:", opts: ["Urgência ou evidência.", "Exclusivamente urgência.", "Coisa julgada ou prescrição.", "Certeza absoluta ou presunção.", "Apenas prova testemunhal."], ans: 0, exp: "Art. 294, caput: 'A tutela provisória pode fundamentar-se em urgência ou evidência.'." },
+  { id: 2, cat: "geral", tag: "Art. 295", q: "A tutela provisória requerida em caráter incidental:", opts: ["Exige recolhimento de novas custas integrais.", "Independe do pagamento de custas.", "Depende de caução obrigatória em qualquer caso.", "Só pode ser pedida após a contestação.", "Exige processo autônomo em apartado."], ans: 1, exp: "Art. 295 do CPC: 'A tutela provisória requerida em caráter incidental independe do pagamento de custas.'." },
+  { id: 3, cat: "geral", tag: "Art. 296", q: "Sobre a eficácia da tutela provisória durante a suspensão do processo (art. 296, parágrafo único):", opts: ["Cessa automaticamente com qualquer suspensão.", "Salvo decisão judicial em contrário, conserva a eficácia durante o período de suspensão.", "Converte-se em coisa julgada material.", "Só se mantém por 5 dias.", "Depende de novo pedido de citação."], ans: 1, exp: "Art. 296, parágrafo único: 'Salvo decisão judicial em contrário, a tutela provisória conservará a eficácia durante o período de suspensão do processo.'." },
+  { id: 4, cat: "geral", tag: "Art. 296", q: "A decisão que concede tutela provisória:", opts: ["Torna-se imutável imediatamente, impedindo revisão pelo juiz.", "Pode, a qualquer tempo, ser revogada ou modificada pelo juiz.", "Só pode ser modificada pelo STF.", "Faz coisa julgada material após 15 dias.", "Não exige fundamentação."], ans: 1, exp: "Art. 296, caput, e art. 298 do CPC: é precária (revogável/modificável a qualquer tempo) e exige motivação clara e precisa." },
+  { id: 5, cat: "geral", tag: "Art. 299", q: "Quando requerida em caráter antecedente, a tutela provisória deve ser endereçada:", opts: ["Sempre ao STJ.", "Ao juízo competente para conhecer do pedido principal.", "A qualquer vara cível por livre escolha.", "Exclusivamente ao Juizado Especial.", "Ao juízo do domicílio do advogado."], ans: 1, exp: "Art. 299, caput: '...quando antecedente, ao juízo competente para conhecer do pedido principal.'." },
+  { id: 6, cat: "geral", tag: "Art. 299, p.ú.", q: "Nos recursos e nas ações de competência originária de tribunal, a tutela provisória será requerida:", opts: ["Sempre ao juiz de 1º grau.", "Ao órgão jurisdicional competente para apreciar o mérito.", "Ao Ministério Público.", "Ao escrivão da vara de origem.", "Apenas em ação autônoma."], ans: 1, exp: "Art. 299, parágrafo único: compete ao órgão jurisdicional competente para apreciar o mérito (em regra, o relator — art. 932, II)." },
+  { id: 7, cat: "geral", tag: "Art. 297", q: "Na efetivação da tutela provisória, segundo o art. 297 do CPC:", opts: ["É vedada a fixação de multa diária (astreintes).", "O juiz pode determinar as medidas adequadas, observando, no que couber, o cumprimento provisório da sentença.", "É vedada contra a Fazenda Pública em qualquer hipótese.", "Só cabe busca e apreensão.", "Exige trânsito em julgado prévio."], ans: 1, exp: "Art. 297, caput e parágrafo único: confere poder geral de efetivação ao juiz, inclusive com astreintes contra a Fazenda (STJ)." },
+  { id: 8, cat: "geral", tag: "Fungibilidade", q: "O art. 305, parágrafo único, consagra a fungibilidade entre as tutelas provisórias. Segundo a doutrina e o STJ, essa fungibilidade é:", opts: ["Apenas da cautelar para a antecipada.", "De mão dupla (ampla), entre cautelar e antecipada e estendida à evidência.", "Vedada pelo CPC/2015.", "Permitida só após a sentença.", "Restrita ao processo penal."], ans: 1, exp: "O STJ (AgRg no REsp 1.103.299/BA) e a doutrina (Donizetti) reconhecem a fungibilidade plena/de mão dupla." },
+  { id: 9, cat: "geral", tag: "Fazenda Pública", q: "Sobre tutela provisória contra a Fazenda Pública, o STF decidiu na Súmula 729 e na ADI 4296 que:", opts: ["É absolutamente proibida em matéria previdenciária.", "As vedações da ADC 4 não se aplicam a benefícios previdenciários (Súmula 729), e é inconstitucional a vedação absoluta do art. 7º, § 2º, da Lei 12.016/2009 (ADI 4296).", "Aplica-se apenas a municípios.", "Depende de aprovação do Congresso Nacional.", "Só cabe após precatório."], ans: 1, exp: "Súmula 729/STF afasta a restrição da ADC 4 em causas previdenciárias; ADI 4296/STF derrubou a proibição geral de liminar no Mandado de Segurança." },
+  { id: 10, cat: "geral", tag: "Cognição", q: "Qual é a diferença estrutural entre tutela provisória e tutela definitiva?", opts: ["A tutela provisória funda-se em cognição sumária (probabilidade) e é precária; a definitiva funda-se em cognição exauriente (certeza) e forma coisa julgada.", "Ambas fazem coisa julgada material.", "A definitiva é sempre liminar.", "A provisória nunca antecipa o mérito.", "Não há diferença técnica no CPC/2015."], ans: 0, exp: "Tutela provisória = cognição sumária + precariedade (art. 296); tutela definitiva = cognição exauriente + aptidão à coisa julgada." },
+
+  // 11-24: URGÊNCIA E CAUTELAR
+  { id: 11, cat: "urgencia", tag: "Art. 300", q: "Quais são os dois requisitos cumulativos para a concessão da tutela de urgência (art. 300, caput)?", opts: ["Coisa julgada e trânsito em julgado.", "Probabilidade do direito (fumus boni iuris) e perigo de dano ou risco ao resultado útil do processo (periculum in mora).", "Abuso do direito de defesa e contrato de depósito.", "Revelia do réu e audiência de conciliação.", "Certeza absoluta e caução obrigatória."], ans: 1, exp: "Art. 300, caput, do CPC exige probabilidade do direito + perigo de dano ou risco ao resultado útil do processo." },
+  { id: 12, cat: "urgencia", tag: "Escala", q: "Na escala didática do Prof. Guilherme Hartmann, qual percentual mínimo de probabilidade autoriza a tutela de urgência?", opts: ["10%.", "50% (dúvida).", "51% (superar a dúvida).", "90%.", "100%."], ans: 2, exp: "50% é dúvida; a partir de 51% já há probabilidade do direito suficiente para a tutela de urgência (com periculum in mora)." },
+  { id: 13, cat: "urgencia", tag: "Caução / STJ", q: "Segundo a 4ª Turma do STJ (REsp 1.837.156, 2025), o deferimento da gratuidade de justiça ao autor:", opts: ["Dispensa automaticamente a caução do art. 300, § 1º.", "Não afasta automaticamente a obrigatoriedade da caução, devendo o juiz analisar o caso concreto.", "Proíbe a concessão de tutela de urgência.", "Obriga o réu a pagar caução.", "Converte a tutela em evidência."], ans: 1, exp: "O art. 300, § 1º diz 'podendo a caução ser dispensada'; o STJ firmou que a gratuidade não gera dispensa automática." },
+  { id: 14, cat: "urgencia", tag: "Serasa / STJ", q: "Nos Temas 31 a 34 do STJ (REsp 1.061.530/RS), a exclusão liminar do nome do devedor de cadastros restritivos (SPC/Serasa) exige:", opts: ["Apenas pedido simples na inicial.", "Questionamento do débito, aparência do bom direito em jurisprudência do STF/STJ e depósito do incontroverso ou caução idônea.", "Sentença transitada em julgado.", "Apenas boletim de ocorrência.", "Concordância do banco."], ans: 1, exp: "Os três requisitos cumulativos foram fixados pelo STJ em recurso repetitivo para evitar liminares sem lastro." },
+  { id: 15, cat: "urgencia", tag: "Art. 300, § 2º", q: "Quando a prova documental inicial for insuficiente para demonstrar a urgência ou probabilidade na tutela de urgência, o juiz pode:", opts: ["Designar audiência de justificação prévia.", "Extinguir imediatamente sem mérito.", "Aplicar multa de 20% ao autor.", "Deferir por tutela de evidência.", "Remeter ao tribunal."], ans: 0, exp: "Art. 300, § 2º: 'A tutela de urgência pode ser concedida liminarmente ou após justificação prévia.'." },
+  { id: 16, cat: "urgencia", tag: "Art. 300, § 3º", q: "A vedação à concessão de tutela antecipada quando houver perigo de irreversibilidade (art. 300, § 3º) é mitigada pela jurisprudência quando:", opts: ["O réu for revel.", "Houver conflito de irreversibilidades (ex.: risco à vida/saúde/alimentos vs. patrimônio), aplicando-se a ponderação (Enunciado 25/ENFAM e 40/CJF).", "O valor da causa for menor que 20 salários mínimos.", "A ação for monitória.", "Houver contrato de depósito."], ans: 1, exp: "Enunciado 25/ENFAM e Enunciado 40/CJF autorizam superar a vedação quando a não concessão causar lesão irreversível a direito fundamental mais valioso." },
+  { id: 17, cat: "urgencia", tag: "Art. 302", q: "Segundo o STJ, a responsabilidade civil da parte que obteve tutela de urgência posteriormente revogada (art. 302) tem natureza:", opts: ["Subjetiva, exigindo prova de dolo.", "Objetiva (teoria do risco-proveito), liquidada nos próprios autos sempre que possível.", "Inexistente se houve advogado.", "Penal.", "Restrita a causas tributárias."], ans: 1, exp: "STJ (REsp 1.191.262/DF; REsp 1.770.124/SP): responsabilidade objetiva ex lege, liquidada nos próprios autos (art. 302, parágrafo único)." },
+  { id: 18, cat: "urgencia", tag: "Tema 692 STJ", q: "Pelo Tema Repetitivo 692 do STJ, reformada tutela antecipada que concedeu benefício previdenciário/assistencial:", opts: ["Os valores recebidos são irrepetíveis em qualquer caso.", "O beneficiário deve devolver os valores recebidos indevidamente (art. 302, III), admitido desconto parcelado de até 30% no benefício ativo.", "Apenas o advogado devolve.", "O INSS suporta o prejuízo integralmente.", "Depende de ação rescisória."], ans: 1, exp: "Tema 692/STJ (Pet 12.482/DF): dever de devolução mediante desconto parcelado na folha (até 30% conforme Lei 8.213/91)." },
+  { id: 19, cat: "urgencia", tag: "Art. 301", q: "Sobre o arresto e o sequestro como medidas cautelares exemplificativas do art. 301 do CPC:", opts: ["Ambos entregam o bem em definitivo.", "O arresto recai sobre patrimônio indeterminado para garantir futura execução por quantia; o sequestro recai sobre bem determinado e litigioso.", "O sequestro só existe no processo penal.", "O arresto exige sentença transitada em julgado.", "São sinônimos absolutos."], ans: 1, exp: "Arresto = garantia de execução por quantia certa (bens indeterminados); sequestro = preservação de coisa certa disputada em juízo." },
+  { id: 20, cat: "urgencia", tag: "Art. 301", q: "O registro de protesto contra alienação de bens (art. 301), segundo o STJ:", opts: ["Impede juridicamente a venda do imóvel e torna nulo o contrato.", "Dá publicidade a terceiros da existência de litígio, afastando a boa-fé do adquirente, mas não impede a alienação.", "Equivale à penhora definitiva.", "Só cabe em inventário.", "Independe de decisão judicial."], ans: 1, exp: "STJ (REsp 1.229.449/MG): o protesto contra alienação não proíbe a venda, apenas afasta a alegação de desconhecimento/boa-fé de terceiros." },
+  { id: 21, cat: "urgencia", tag: "Art. 306", q: "Na tutela cautelar requerida em caráter antecedente (art. 306), qual é o prazo para o réu contestar o pedido cautelar após ser citado?", opts: ["15 dias.", "5 dias.", "30 dias.", "10 dias.", "48 horas."], ans: 1, exp: "Art. 306 do CPC: 'O réu será citado para, no prazo de 5 (cinco) dias, contestar o pedido e indicar as provas que pretende produzir.'." },
+  { id: 22, cat: "urgencia", tag: "Art. 308 / STJ", q: "Efetivada a tutela cautelar antecedente, o autor deve formular o pedido principal no prazo de 30 dias (art. 308). Segundo a Corte Especial do STJ (EREsp 2.066.868/SP, 2024), esse prazo conta-se:", opts: ["Em dias corridos, da concessão da liminar.", "Em dias úteis (art. 219), a partir da completa efetivação da medida cautelar.", "Em dias corridos, da citação do réu.", "Em meses.", "Apenas após a contestação."], ans: 1, exp: "A Corte Especial do STJ firmou que o prazo de 30 dias do art. 308 é processual (dias úteis) e inicia-se da efetivação integral da cautelar." },
+  { id: 23, cat: "urgencia", tag: "Art. 309", q: "Cessada a eficácia da tutela cautelar antecedente (art. 309, parágrafo único), é lícito ao autor renovar o pedido cautelar?", opts: ["Sim, livremente com os mesmos fundamentos.", "Não, é vedado renovar o pedido, salvo sob novo fundamento.", "Sim, após 5 dias.", "Sim, pagando novas custas.", "Apenas em outro estado."], ans: 1, exp: "Art. 309, parágrafo único: 'Se por qualquer motivo cessar a eficácia da tutela cautelar, é vedado à parte renovar o pedido, salvo sob novo fundamento.'." },
+  { id: 24, cat: "urgencia", tag: "Art. 310", q: "O indeferimento da tutela cautelar impede a parte de formular o pedido principal (art. 310)?", opts: ["Sim, sempre faz coisa julgada.", "Não, salvo se o motivo do indeferimento for o reconhecimento de decadência ou de prescrição.", "Sim, se houver revelia.", "Sim, se o réu contestar em 5 dias.", "Não, em nenhuma hipótese, mesmo havendo prescrição."], ans: 1, exp: "Art. 310 do CPC: o indeferimento da cautelar não obsta o pedido principal, exceto quando reconhecer decadência ou prescrição." },
+
+  // 25-36: ANTECIPADA ANTECEDENTE E ESTABILIZAÇÃO
+  { id: 25, cat: "estab", tag: "Art. 303", q: "Na petição inicial da tutela antecipada em caráter antecedente (art. 303), o autor deve indicar:", opts: ["Apenas o pedido liminar, sem mencionar o pedido final.", "O requerimento da tutela antecipada, a indicação do pedido de tutela final, o valor da causa considerando o pedido final e a opção expressa pelo benefício do art. 303, § 5º.", "Apenas a qualificação das partes.", "Provas periciais já concluídas.", "Caução em dinheiro obrigatória."], ans: 1, exp: "Art. 303, caput, §§ 4º e 5º do CPC exigem indicação do pedido final, valor da causa correspondente e menção expressa ao benefício." },
+  { id: 26, cat: "estab", tag: "Art. 303, § 1º", q: "Concedida a tutela antecipada antecedente, qual o prazo padrão para o autor aditar a inicial (art. 303, § 1º, I)?", opts: ["5 dias.", "15 dias (ou outro prazo maior fixado pelo juiz), nos mesmos autos e sem novas custas.", "30 dias corridos.", "48 horas.", "60 dias."], ans: 1, exp: "Art. 303, § 1º, I e § 3º: prazo de 15 dias (ou maior fixado pelo juiz), nos mesmos autos e sem novas custas." },
+  { id: 27, cat: "estab", tag: "Art. 303, § 6º", q: "Se o juiz entender que NÃO há elementos para conceder a tutela antecipada antecedente (art. 303, § 6º):", opts: ["Indefere imediatamente e condena em multa.", "Determina a emenda da petição inicial em até 5 dias, sob pena de indeferimento e extinção sem mérito.", "Converte em tutela de evidência.", "Cita o réu para contestar em 5 dias.", "Remete ao tribunal."], ans: 1, exp: "Art. 303, § 6º: prazo de até 5 dias para emenda, sob pena de indeferimento e extinção sem resolução do mérito." },
+  { id: 28, cat: "estab", tag: "Art. 303, § 2º", q: "Concedida a tutela antecipada antecedente, se o autor não realizar o aditamento no prazo legal (e o réu tiver recorrido):", opts: ["A tutela se estabiliza a favor do autor.", "O processo é extinto sem resolução do mérito e a liminar perde eficácia.", "O juiz julga procedente o pedido final.", "O réu paga honorários de 5%.", "Suspende-se o feito por 2 anos."], ans: 1, exp: "Art. 303, § 2º: 'Não realizado o aditamento a que se refere o inciso I do § 1º deste artigo, o processo será extinto sem resolução do mérito.'." },
+  { id: 29, cat: "estab", tag: "STJ Prazos", q: "Sobre a ordem de contagem dos prazos do réu (para recorrer) e do autor (para aditar) na tutela antecipada antecedente, o STJ (2020/2024) firmou que:", opts: ["São prazos simultâneos que correm juntos da concessão da liminar.", "São prazos sucessivos: primeiro corre o prazo do réu após sua citação; apenas se o réu impugnar abre-se o prazo de 15 dias para o autor aditar.", "O autor adita antes mesmo de distribuir a inicial.", "O réu não precisa ser citado.", "Não existe prazo para o réu."], ans: 1, exp: "O STJ consolidou a sucessividade dos prazos para não forçar o autor a aditar antes de saber se haverá estabilização pela inércia do réu." },
+  { id: 30, cat: "estab", tag: "Art. 218, § 4º", q: "Se o autor apresentar o aditamento da inicial antes mesmo de ser intimado do recurso do réu:", opts: ["O aditamento é intempestivo (nulo).", "É plenamente válido e tempestivo, nos termos do art. 218, § 4º, do CPC.", "Gera multa por litigância de má-fé.", "Impede a citação do réu.", "Extingue o processo."], ans: 1, exp: "Art. 218, § 4º, do CPC: 'Será considerado tempestivo o ato praticado antes do termo inicial do prazo.'." },
+  { id: 31, cat: "estab", tag: "STJ Divergência", q: "Para impedir a estabilização da tutela antecipada antecedente (art. 304), qual é a posição MAJORITÁRIA do STJ (3ª e 4ª Turmas)?", opts: ["Somente o agravo de instrumento impede a estabilização.", "Qualquer manifestação de inconformismo tempestiva do réu — inclusive a contestação — impede a estabilização.", "Apenas embargos de declaração impedem.", "Nem recurso nem contestação impedem.", "Somente ação rescisória impede."], ans: 1, exp: "A 3ª e a 4ª Turmas (REsp 1.760.966/SP; REsp 1.938.645/CE) adotam interpretação ampliativa: contestação ou outra impugnação idônea evita a estabilização." },
+  { id: 32, cat: "estab", tag: "1ª Turma STJ", q: "Qual é a posição da 1ª Turma do STJ (REsp 1.797.365/RS) e de Elpídio Donizetti sobre o art. 304?", opts: ["Contestação impede a estabilização.", "Interpretação literal/restritiva: apenas a interposição do recurso cabível (agravo de instrumento) impede a estabilização.", "Não existe estabilização no CPC.", "A estabilização só vale para cautelares.", "Basta petição simples após 2 anos."], ans: 1, exp: "A 1ª Turma do STJ e Donizetti seguem a literalidade do art. 304 ('não for interposto o respectivo recurso')." },
+  { id: 33, cat: "estab", tag: "Art. 304, § 6º", q: "Sobre a relação entre estabilização da tutela antecipada (art. 304) e coisa julgada material:", opts: ["A decisão estabilizada forma coisa julgada material imediata, cabendo ação rescisória.", "A decisão que concede a tutela NÃO faz coisa julgada (§ 6º), descabendo ação rescisória (Enunciado 33/FPPC).", "Faz coisa julgada apenas contra o autor.", "Só faz coisa julgada em ações de família.", "Converte-se em súmula vinculante."], ans: 1, exp: "Art. 304, § 6º: 'A decisão que concede a tutela não fará coisa julgada...'. Logo, não cabe ação rescisória (art. 966), mas sim a ação revisional do § 2º." },
+  { id: 34, cat: "estab", tag: "Art. 304, § 5º", q: "Qual é o prazo para propor a ação autônoma visando rever, reformar ou invalidar a tutela antecipada estabilizada?", opts: ["15 dias úteis.", "2 anos (decadencial), contados da ciência da decisão que extinguiu o processo.", "5 anos prescricionais.", "30 dias.", "Imprescritível."], ans: 1, exp: "Art. 304, § 5º: extingue-se após 2 anos, contados da ciência da decisão extintiva (art. 304, § 1º), perante o juízo prevento (§ 4º)." },
+  { id: 35, cat: "estab", tag: "Honorários STJ", q: "Ocorrendo a estabilização da tutela antecipada e extinção do processo (art. 304, § 1º), os honorários advocatícios são fixados pelo STJ (REsp 1.895.663/PR) em:", opts: ["20% sobre o valor da condenação.", "5% sobre o valor da causa, por analogia ao art. 701 do CPC (ação monitória).", "Zero (cada parte arca com seus custos).", "1% fixo.", "Salário mínimo fixo."], ans: 1, exp: "A 3ª Turma do STJ aplicou analogicamente o art. 701 do CPC, fixando honorários de 5% diante da rápida solução sem instrução." },
+  { id: 36, cat: "estab", tag: "Sem Citação", q: "Se o autor obteve a liminar do art. 303, mas o réu ainda NÃO foi citado:", opts: ["Já ocorre a estabilização em 15 dias.", "Não pode ocorrer estabilização nem fluência de prazo recursal contra o réu antes de sua citação válida.", "O juiz extingue o feito com mérito.", "O autor é condenado por má-fé.", "Converte-se em cautelar."], ans: 1, exp: "Sem citação válida não se forma a relação angular nem corre o prazo de recurso para o réu." },
+
+  // 37-50: EVIDÊNCIA E RECURSOS
+  { id: 37, cat: "evidencia", tag: "Art. 311", q: "Na tutela de evidência (art. 311 do CPC), qual requisito da tutela de urgência é expressamente dispensado?", opts: ["Probabilidade do direito.", "Demonstração de perigo de dano ou de risco ao resultado útil do processo (periculum in mora).", "Motivação da decisão.", "Capacidade postulatória.", "Competência do juízo."], ans: 1, exp: "Art. 311, caput: concedida 'independentemente da demonstração de perigo de dano ou de risco ao resultado útil do processo'." },
+  { id: 38, cat: "evidencia", tag: "Liminaridade", q: "Em quais incisos do art. 311 do CPC o juiz pode decidir liminarmente (inaudita altera parte)?", opts: ["Nos incisos I e IV.", "Nos incisos II e III (art. 311, parágrafo único e art. 9º, parágrafo único, II).", "Em todos os incisos.", "Apenas no inciso I.", "Em nenhum."], ans: 1, exp: "Art. 311, parágrafo único: apenas nas hipóteses dos incisos II (documental + tese repetitiva/SV) e III (contrato de depósito)." },
+  { id: 39, cat: "evidencia", tag: "Inciso I / STJ", q: "Segundo o STJ (2022) e o Enunciado 47/CJF, a tutela de evidência do art. 311, I exige:", opts: ["Apenas conduta protelatória do réu.", "Cumulativamente o abuso/propósito protelatório do réu E a verossimilhança do direito alegado pelo autor.", "Apenas revelia.", "Apenas caução real.", "Testemunha no exterior."], ans: 1, exp: "Não basta a chicana processual do réu; é indispensável a verossimilhança/probabilidade do direito do autor." },
+  { id: 40, cat: "evidencia", tag: "Inciso II / CJF", q: "Os Enunciados 48/CJF e 30–31/ENFAM ampliam o art. 311, II para abranger também:", opts: ["Sentenças de 1º grau sem recurso.", "Repercussão Geral do STF, IAC, controle concentrado (ADI/ADC/ADPF) e súmulas do STJ/STF, independentemente do trânsito em julgado do paradigma.", "Apenas pareceres doutrinários.", "Apenas súmulas de tribunais arbitrais.", "Somente decisões transitadas há mais de 5 anos."], ans: 1, exp: "Enunciado 48/CJF + Enunciados 30 e 31/ENFAM estendem o inciso II aos demais precedentes qualificados e dispensam o trânsito em julgado do paradigma." },
+  { id: 41, cat: "evidencia", tag: "Inciso III", q: "No art. 311, III (pedido reipersecutório fundado em prova documental do contrato de depósito), o juiz decreta:", opts: ["Prisão civil do depositário infiel.", "Ordem de entrega do objeto custodiado, sob cominação de multa.", "Perda automática de bens imóveis.", "Suspensão por 1 ano.", "Indenização moral imediata."], ans: 1, exp: "Art. 311, III determina a ordem de entrega do objeto custodiado sob cominação de multa (vedada prisão pela Súmula Vinculante 25)." },
+  { id: 42, cat: "evidencia", tag: "Inciso IV", q: "Por que o art. 311, IV não admite decisão liminar inaudita altera parte?", opts: ["Porque exige que o réu seja citado e tenha oportunidade de opor (ou não) prova capaz de gerar dúvida razoável.", "Porque exige perícia obrigatória.", "Porque se aplica só a execuções fiscais.", "Porque é tutela cautelar.", "Porque depende de caução."], ans: 0, exp: "Sem ouvir o réu, não é possível verificar se ele opõe ou não prova capaz de gerar dúvida razoável." },
+  { id: 43, cat: "evidencia", tag: "Rol / Monitória", q: "O art. 701 do CPC (ação monitória) prevê hipótese de tutela da evidência fora do art. 311, estabelecendo prazo de cumprimento de:", opts: ["5 dias, sem honorários.", "15 dias, com honorários de 5% do valor atribuído à causa (e isenção de custas se cumprido no prazo).", "30 dias, com honorários de 20%.", "10 dias.", "48 horas."], ans: 1, exp: "Art. 701, caput e § 1º do CPC: 15 dias para cumprimento, honorários de 5% e isenção de custas." },
+  { id: 44, cat: "evidencia", tag: "Prática", q: "Em processo de inventário, segundo julgado citado na aula, cabe tutela de evidência para antecipar o uso/fruição de bem hereditário quando:", opts: ["Todos os herdeiros brigarem judicialmente.", "Não houver controvérsia ou oposição dos demais herdeiros, reservando-se a partilha definitiva para a sentença.", "Houver dívida fiscal pendente sem garantia.", "O bem já tiver sido vendido a terceiro.", "O espólio for insolvente."], ans: 1, exp: "Ausente oposição entre os herdeiros, admite-se a fruição antecipada por evidência até a partilha final." },
+  { id: 45, cat: "evidencia", tag: "Divórcio Liminar", q: "No debate sobre o divórcio liminar (direito potestativo incondicionado), qual enunciado do IBDFAM admite excepcionalmente sua concessão?", opts: ["Enunciado 10.", "Enunciado 46 do IBDFAM (sobretudo quando há dificuldade na citação do cônjuge).", "Enunciado 90.", "Enunciado 12.", "Nenhum enunciado."], ans: 1, exp: "Enunciado 46/IBDFAM fundamenta a corrente favorável excepcional (dignidade humana e personalidade), em oposição à corrente que exige contraditório prévio (art. 9º)." },
+  { id: 46, cat: "evidencia", tag: "Momento", q: "Diferentemente da tutela de urgência, a tutela provisória de evidência é:", opts: ["Sempre antecedente.", "Sempre incidental e sempre satisfativa.", "Cautelar ou satisfativa.", "Sujeita à estabilização do art. 304.", "Dependente de justificação prévia."], ans: 1, exp: "Não existe tutela de evidência antecedente nem cautelar; é sempre incidental (inclusive na inicial completa) e satisfativa." },
+  { id: 47, cat: "evidencia", tag: "Art. 1.015, I", q: "Qual recurso cabe contra a decisão interlocutória de 1º grau que concede ou indefere tutela provisória (de urgência ou de evidência)?", opts: ["Apelação imediata.", "Agravo de Instrumento (art. 1.015, I, do CPC).", "Agravo retido.", "Recurso ordinário.", "Embargos infringentes."], ans: 1, exp: "Art. 1.015, I, do CPC prevê expressamente agravo de instrumento contra decisões sobre tutelas provisórias." },
+  { id: 48, cat: "evidencia", tag: "Perda de Objeto", q: "Se, na pendência de agravo de instrumento contra decisão de tutela provisória, o juiz de 1º grau proferir sentença de mérito:", opts: ["A sentença é nula por usurpação de competência.", "Em regra, ocorre a perda superveniente do objeto do agravo, pois a cognição sumária é substituída pela cognição exauriente.", "O agravo converte-se automaticamente em REsp.", "O tribunal deve julgar o agravo e anular a sentença.", "Suspende-se a sentença por 2 anos."], ans: 1, exp: "Tese consolidada no STJ: a tutela definitiva (sentença de mérito) substitui a tutela provisória, gerando prejudicialidade do agravo." },
+  { id: 49, cat: "evidencia", tag: "Súmula 735 STF", q: "Qual é o entendimento sumulado pelo STF (aplicado por analogia pelo STJ) quanto a Recurso Extraordinário/Especial contra acórdão que defere ou indefere liminar?", opts: ["Sempre cabível com efeito suspensivo.", "Súmula 735/STF: não cabe RE contra acórdão que defere medida liminar (salvo violação direta aos requisitos legais).", "Só cabe se o valor superar 1.000 salários mínimos.", "Depende de caução em dobro.", "Cabe apenas via reclamação."], ans: 1, exp: "Súmula 735/STF: juízos precários não ensejam, em regra, recurso excepcional, salvo ofensa direta à lei federal disciplinadora do instituto." },
+  { id: 50, cat: "evidencia", tag: "Tema 743 STJ", q: "Segundo o Tema Repetitivo 743/STJ (reafirmado pela Corte Especial em 2023), a multa diária (astreintes) fixada em tutela provisória:", opts: ["Não pode ser executada antes do trânsito em julgado.", "Pode ser objeto de execução provisória desde logo, ficando apenas o levantamento do valor condicionado ao trânsito em julgado da sentença favorável.", "É sempre convertida em perdas e danos.", "Não se aplica à obrigação de fazer.", "Só vale após o encerramento do processo."], ans: 1, exp: "Tema 743/STJ: execução provisória é admitida desde logo, mas o levantamento dos valores depende do trânsito em julgado." }
+];
+
+const letters = ["A", "B", "C", "D", "E"];
+const state = {};
+let activeFilter = "all";
+
+const quizContainer = document.getElementById("quiz-container");
+const scoreOkEl = document.getElementById("score-ok");
+const scoreErrEl = document.getElementById("score-err");
+const scorePctEl = document.getElementById("score-pct");
+const scoreAnsEl = document.getElementById("score-answered");
+
+function updateScore() {
+  const totalAns = Object.keys(state).length;
+  let ok = 0, err = 0;
+  for (const [id, choice] of Object.entries(state)) {
+    const q = QUESTIONS.find(x => x.id === Number(id));
+    if (choice === q.ans) ok++; else err++;
+  }
+  scoreOkEl.textContent = ok;
+  scoreErrEl.textContent = err;
+  scoreAnsEl.textContent = `${totalAns}/50`;
+  scorePctEl.textContent = totalAns ? `${Math.round((ok / totalAns) * 100)}%` : "0%";
+}
+
+function renderQuiz() {
+  quizContainer.innerHTML = "";
+  const filtered = QUESTIONS.filter(q => {
+    if (activeFilter === "all") return true;
+    if (activeFilter === "wrong") return state[q.id] !== undefined && state[q.id] !== q.ans;
+    return q.cat === activeFilter;
+  });
+
+  if (filtered.length === 0) {
+    quizContainer.innerHTML = `<div class="callout callout-blue"><div class="callout-title">Nenhuma questão neste filtro</div><p style="margin:0;">Nenhuma questão corresponde ao filtro selecionado no momento.</p></div>`;
+    return;
+  }
+
+  filtered.forEach(q => {
+    const chosen = state[q.id];
+    const isAnswered = chosen !== undefined;
+    const card = document.createElement("div");
+    card.className = "q-card" + (isAnswered ? (chosen === q.ans ? " answered-ok" : " answered-err") : "");
+
+    const optsHtml = q.opts.map((opt, idx) => {
+      let cls = "q-opt";
+      if (isAnswered) {
+        if (idx === q.ans) cls += " correct";
+        else if (idx === chosen) cls += " wrong";
+      }
+      return `<button class="${cls}" data-qid="${q.id}" data-idx="${idx}" ${isAnswered ? "disabled" : ""}>
+        <span class="opt-letter">${letters[idx]}</span>
+        <span>${opt}</span>
+      </button>`;
+    }).join("");
+
+    card.innerHTML = `
+      <div class="q-meta">
+        <span class="q-num">QUESTÃO ${String(q.id).padStart(2, "0")}</span>
+        <span class="q-tag">${q.tag}</span>
+      </div>
+      <div class="q-stem">${q.q}</div>
+      <div class="q-opts">${optsHtml}</div>
+      <div class="q-feedback ${isAnswered ? "show" : ""}">
+        <strong>Gabarito: ${letters[q.ans]}</strong> — ${q.exp}
+      </div>
+    `;
+    quizContainer.appendChild(card);
+  });
+
+  quizContainer.querySelectorAll(".q-opt").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const qid = Number(btn.dataset.qid);
+      const idx = Number(btn.dataset.idx);
+      state[qid] = idx;
+      updateScore();
+      renderQuiz();
+    });
+  });
+}
+
+document.querySelectorAll(".btn-filter").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".btn-filter").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = btn.dataset.filter;
+    renderQuiz();
+  });
+});
+
+document.getElementById("btn-reset").addEventListener("click", () => {
+  for (const k of Object.keys(state)) delete state[k];
+  updateScore();
+  renderQuiz();
+});
+
+window.addEventListener("scroll", () => {
+  const docH = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docH > 0 ? (window.scrollY / docH) * 100 : 0;
+  document.getElementById("read-progress").style.width = `${Math.min(100, Math.max(0, pct))}%`;
+
+  const sections = document.querySelectorAll("section.section-card");
+  let currentId = "";
+  sections.forEach(sec => {
+    if (window.scrollY >= sec.offsetTop - 160) currentId = sec.id;
+  });
+  document.querySelectorAll("#toc a").forEach(a => {
+    a.classList.toggle("active", a.getAttribute("href") === `#${currentId}`);
+  });
+});
+
+renderQuiz();
+updateScore();
+</script>
+</body>
+</html>
